@@ -26,7 +26,7 @@ ASSET_LABELS = {
     "SEC": "Secondaries", "VC": "Venture Capital", "OPP": "Uncorrelated",
 }
 
-st.set_page_config(page_title="Evoke Document Intelligence", page_icon="✦",
+st.set_page_config(page_title="Document Intelligence Platform", page_icon="✦",
                    layout="wide", initial_sidebar_state="expanded")
 
 SUNBURST = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><g stroke="white" stroke-width="8" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="8"/><line x1="50" y1="50" x2="79" y2="17"/><line x1="50" y1="50" x2="95" y2="38"/><line x1="50" y1="50" x2="95" y2="62"/><line x1="50" y1="50" x2="79" y2="83"/><line x1="50" y1="50" x2="50" y2="92"/><line x1="50" y1="50" x2="21" y2="83"/><line x1="50" y1="50" x2="5" y2="62"/><line x1="50" y1="50" x2="5" y2="38"/><line x1="50" y1="50" x2="21" y2="17"/></g></svg>'
