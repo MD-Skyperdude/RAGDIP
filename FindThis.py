@@ -1,5 +1,5 @@
 """
-FindThis.py — Evoke Advisors Document Intelligence Platform
+FindThis.py — Document Intelligence Platform
 """
 
 import os, json, subprocess
@@ -29,8 +29,6 @@ ASSET_LABELS = {
 st.set_page_config(page_title="Document Intelligence Platform", page_icon="✦",
                    layout="wide", initial_sidebar_state="expanded")
 
-SUNBURST = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><g stroke="white" stroke-width="8" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="8"/><line x1="50" y1="50" x2="79" y2="17"/><line x1="50" y1="50" x2="95" y2="38"/><line x1="50" y1="50" x2="95" y2="62"/><line x1="50" y1="50" x2="79" y2="83"/><line x1="50" y1="50" x2="50" y2="92"/><line x1="50" y1="50" x2="21" y2="83"/><line x1="50" y1="50" x2="5" y2="62"/><line x1="50" y1="50" x2="5" y2="38"/><line x1="50" y1="50" x2="21" y2="17"/></g></svg>'
-
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
@@ -49,8 +47,6 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
 /* ── SIDEBAR ── */
 [data-testid="stSidebar"] { background:var(--navy-dark) !important; border-right:1px solid var(--navy-mid); }
 [data-testid="stSidebar"] * { color:var(--white) !important; }
-
-/* Collapse arrow button (when open) */
 [data-testid="stSidebarCollapseButton"] button {
     background: rgba(201,169,110,0.2) !important;
     border: 1px solid var(--gold) !important;
@@ -60,8 +56,6 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
     visibility: visible !important;
 }
 [data-testid="stSidebarCollapseButton"] svg { fill:var(--white) !important; }
-
-/* Expand tab (when closed) */
 [data-testid="collapsedControl"] {
     background: var(--navy-dark) !important;
     border-top: 2px solid var(--gold) !important;
@@ -69,7 +63,6 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
     border-bottom: 2px solid var(--gold) !important;
     border-radius: 0 8px 8px 0 !important;
     opacity: 1 !important; visibility: visible !important;
-    color: var(--gold) !important;
 }
 [data-testid="collapsedControl"] svg { fill:var(--gold) !important; stroke:var(--gold) !important; }
 
@@ -115,11 +108,6 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
 }
 .stButton>button:hover { background:var(--navy-mid) !important; border-bottom:2px solid var(--gold) !important; }
 
-/* ── TABS ── */
-.stTabs [data-baseweb="tab-list"] { background:var(--white) !important; border-bottom:2px solid var(--gray-light) !important; gap:0 !important; }
-.stTabs [data-baseweb="tab"] { font-size:0.75rem !important; font-weight:600 !important; letter-spacing:0.1em !important; text-transform:uppercase !important; color:var(--gray) !important; padding:0.8rem 1.5rem !important; }
-.stTabs [aria-selected="true"] { color:var(--navy) !important; border-bottom:2px solid var(--gold) !important; }
-
 /* ── RESULT CARDS ── */
 .result-card { background:var(--white); border:1px solid var(--gray-light); border-left:3px solid var(--navy); border-radius:4px; padding:1.2rem 1.4rem; margin-bottom:0.8rem; }
 .result-card:hover { border-left-color:var(--gold); box-shadow:0 4px 16px rgba(27,42,74,0.1); }
@@ -130,6 +118,14 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
 .type-badge { display:inline-block; background:var(--gray-light); color:var(--navy); font-size:0.65rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0.15rem 0.5rem; border-radius:2px; margin-right:0.4rem; }
 .notes-badge { background:#EBF3F0; color:var(--green); }
 .marketing-badge { background:#FDF3E3; color:var(--amber); }
+
+/* ── CITATION REF ── */
+.citation-ref {
+    display:inline-block; background:var(--navy); color:var(--gold-light);
+    font-size:0.65rem; font-weight:700; padding:0.1rem 0.4rem;
+    border-radius:2px; margin:0 0.1rem; vertical-align:super;
+    letter-spacing:0.05em; cursor:pointer;
+}
 
 /* ── ANSWER BLOCK ── */
 .answer-block { background:var(--white); border:1px solid var(--gray-light); border-top:3px solid var(--gold); border-radius:4px; padding:1.6rem; margin-bottom:1.2rem; }
@@ -197,8 +193,7 @@ def get_anthropic_client():
 def get_db():
     return psycopg2.connect(DATABASE_URL)
 
-# ── QUERY PIPELINE ────────────────────────────────────────────────────────────
-# ── ASSET CLASS ALIASES ──────────────────────────────────────────────────────
+# ── ASSET CLASS ALIASES ───────────────────────────────────────────────────────
 ASSET_ALIASES = {
     "real estate": "RE", "real assets": "RE", "property": "RE", "realty": "RE",
     "private equity": "PE", "buyout": "PE", "growth equity": "PE",
@@ -207,8 +202,7 @@ ASSET_ALIASES = {
     "venture capital": "VC", "venture": "VC", "startup": "VC", "early stage": "VC",
     "uncorrelated": "OPP", "macro": "OPP", "hedge fund": "OPP", "alternatives": "OPP",
 }
-
-RECENCY_KEYWORDS = ["most recent", "latest", "newest", "most recent", "last", "recent"]
+RECENCY_KEYWORDS = ["most recent", "latest", "newest", "last", "recent"]
 
 def normalize_asset_class(text):
     if not text: return None
@@ -220,20 +214,20 @@ def normalize_asset_class(text):
     return None
 
 def normalize_manager(raw, managers):
-    """Fuzzy match raw manager name against known managers in DB."""
     if not raw: return None
-    raw_lower = raw.lower().replace(" ","")
+    raw_lower = raw.lower().replace(" ", "")
     for m in managers:
         if raw_lower in m.lower() or m.lower() in raw_lower:
             return m
         if raw.lower() in m.lower():
             return m
-    return raw  # fall back to raw for LIKE query
+    return raw
 
 def is_recency_query(query):
     q = query.lower()
     return any(kw in q for kw in RECENCY_KEYWORDS)
 
+# ── QUERY PIPELINE ────────────────────────────────────────────────────────────
 def classify_intent(query, client):
     managers = get_managers()
     manager_list = ", ".join(managers[:50])
@@ -247,7 +241,6 @@ Known managers in the database (use exact spelling if matched): {manager_list}
 Return this exact JSON:
 {{"mode":"filter"|"extraction"|"qa","asset_class":"RE"|"PE"|"PC"|"SEC"|"VC"|"OPP"|null,"manager_name":"exact manager name from list or null","doc_type":"Notes"|"Marketing"|null,"year":"YYYY"|null,"sort":"recent"|null,"search_term":"core search phrase","is_multi_part":true|false}}
 
-Asset class codes: RE=Real Estate, PE=Private Equity, PC=Private Credit, SEC=Secondaries, VC=Venture Capital, OPP=Uncorrelated
 Rules:
 - mode filter: user wants to find or list documents
 - mode extraction: user wants specific numbers or data points pulled out
@@ -255,21 +248,17 @@ Rules:
 - year: only set if a specific year is mentioned. NEVER set year for words like recent/latest/newest
 - sort: set to "recent" if query uses words like most recent, latest, newest, last, recent
 - manager_name: match to exact name from the known managers list above, or null
-- is_multi_part: true if query asks about multiple managers or multiple data fields at once
-Return only valid JSON, nothing else."""
-
+- is_multi_part: true if query asks about multiple managers or multiple data fields
+Return only valid JSON."""
     try:
         r = client.messages.create(model="claude-haiku-4-5", max_tokens=300,
                                    messages=[{"role":"user","content":prompt}])
         t = r.content[0].text.strip().replace("```json","").replace("```","").strip()
         result = json.loads(t)
-        # Post-process: normalize asset class
         if result.get("asset_class"):
             result["asset_class"] = normalize_asset_class(result["asset_class"]) or result["asset_class"]
-        # Post-process: normalize manager name
         if result.get("manager_name"):
             result["manager_name"] = normalize_manager(result["manager_name"], get_managers())
-        # Post-process: if recency keyword detected, override year and set sort
         if is_recency_query(query):
             result["year"] = None
             result["sort"] = "recent"
@@ -286,25 +275,21 @@ def metadata_filter(intent, sf):
     dtype = sf.get("doc_type") or intent.get("doc_type")
     yr    = sf.get("year") or intent.get("year")
     sort_recent = intent.get("sort") == "recent"
-
     if asset: wheres.append("asset_class=%s"); params.append(asset)
     if mgr:   wheres.append("LOWER(manager_name) LIKE LOWER(%s)"); params.append(f"%{mgr}%")
     if dtype: wheres.append("doc_type=%s"); params.append(dtype)
     if yr:
         try: wheres.append("EXTRACT(YEAR FROM doc_date)=%s"); params.append(int(yr))
         except: pass
-
     sql = "SELECT document_id,filename,manager_name,asset_class,doc_type,doc_date,file_extension FROM documents"
     if wheres: sql += " WHERE " + " AND ".join(wheres)
     sql += " ORDER BY doc_date DESC"
-    # For recency queries return top 20, otherwise 500
     sql += " LIMIT 20" if sort_recent else " LIMIT 500"
     cur.execute(sql, params); rows = cur.fetchall()
     cur.close(); conn.close()
     return rows
 
 def hybrid_retrieve(query, doc_ids, top_k=TOP_K):
-    # Strip recency language from the search vector — it confuses semantic search
     import re
     clean_query = query
     for kw in RECENCY_KEYWORDS:
@@ -331,12 +316,12 @@ def generate_answer(query, chunks, client, mode):
         ctx.append(f"[SOURCE {i}] {fname} (Page {page})\n{text}")
         sources.append({"num":i,"filename":fname,"page":page,"manager":mgr,"asset":asset,"dtype":dtype})
     instr = {
-        "extraction": "Extract the specific data points the user is asking for. For each value cite [SOURCE N]. If a value is not present in any source, state clearly that it was not found — do not estimate or infer.",
+        "extraction": "Extract the specific data points the user is asking for. For each value cite [SOURCE N]. If a value is not present in any source, state clearly that it was not found.",
         "filter":     "Summarize the key themes and findings across these documents. Note any significant differences or patterns.",
-        "qa":         "Answer the question using only the information in the sources below. Cite every factual claim with [SOURCE N]. If the answer cannot be found in the sources, say so explicitly — do not draw on general knowledge.",
+        "qa":         "Answer the question using only the information in the sources below. Cite every factual claim with [SOURCE N]. If the answer cannot be found in the sources, say so explicitly.",
     }.get(mode, "Answer using only the retrieved sources. Cite every claim with [SOURCE N].")
     docs_text = "\n\n---\n\n".join(ctx)
-    prompt = f"""You are a document analyst for Evoke Advisors, a private investment advisory firm. Your answers are read by investment professionals who require precision.
+    prompt = f"""You are a document intelligence assistant analyzing investment documents.
 
 {instr}
 
@@ -347,7 +332,7 @@ QUESTION: {query}
 
 Critical rules:
 - Use ONLY information from the retrieved documents above
-- Cite EVERY factual claim with [SOURCE N]  
+- Cite EVERY factual claim with [SOURCE N]
 - Never infer, estimate, or use general financial knowledge
 - If something is not in the sources, say "Not found in retrieved documents"
 - Write in clean prose — no markdown headers, no bullet asterisks, no bold markers
@@ -380,7 +365,6 @@ def get_managers():
 with st.sidebar:
     doc_count, chunk_count, manager_count, date_range = get_db_stats()
     date_str = f'{date_range[0].strftime("%b %Y")} — {date_range[1].strftime("%b %Y")}' if date_range[0] else ""
-
     st.markdown('<div class="sidebar-title">Document Intelligence</div>', unsafe_allow_html=True)
     st.markdown('<p style="font-size:0.6rem;color:#8A96A8;letter-spacing:0.12em;text-transform:uppercase;margin:0.3rem 0 0">RAG Prototype</p>', unsafe_allow_html=True)
     st.markdown('<hr style="border:none;border-top:1px solid rgba(201,169,110,0.2);margin:1.5rem 0"/>', unsafe_allow_html=True)
@@ -433,7 +417,6 @@ with fc4:
 
 sidebar_filters = {"asset_class":asset_filter,"manager_name":mgr_filter,"doc_type":type_filter,"year":year_filter}
 
-# Live filter count + SEARCH on same row
 any_filter = any(sidebar_filters.values())
 cnt_col, btn_col = st.columns([4,1])
 with cnt_col:
@@ -495,7 +478,6 @@ if st.session_state.results:
     sources       = r["sources"]
     filter_only   = r.get("filter_only", False)
 
-    # Stats bar — all pre-computed, no nested f-strings
     mode_label   = "FILTER BROWSE" if filter_only else mode.upper()
     filter_parts = [f"{k.replace('_',' ').title()}: {v}" for k,v in r["sidebar"].items() if v]
     filter_label = ", ".join(filter_parts) if filter_parts else "None"
@@ -511,12 +493,10 @@ if st.session_state.results:
         st.session_state.highlight_source = None
     highlight = st.session_state.highlight_source
 
-    # Build unique source list for the answer tab
     seen_src, unique_chunks = set(), []
     for row in chunk_rows:
         if row[1] not in seen_src: seen_src.add(row[1]); unique_chunks.append(row)
 
-    # Fetch file paths for source docs
     path_map = {}
     if unique_chunks:
         conn = get_db(); cur = conn.cursor()
@@ -526,7 +506,6 @@ if st.session_state.results:
         path_map = {row[0]:row[1] for row in cur.fetchall()}
         cur.close(); conn.close()
 
-    # Manual tab selector — allows programmatic switching from citation buttons
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = 0
 
@@ -534,8 +513,6 @@ if st.session_state.results:
     tab_cols = st.columns([1.2, 1.2, 1.6, 3])
     for i, label in enumerate(tab_labels):
         with tab_cols[i]:
-            is_active = st.session_state.active_tab == i
-            btn_style = "border-bottom:2px solid #C9A96E;color:#1B2A4A;font-weight:700;" if is_active else "color:#8A96A8;"
             if st.button(label, key=f"tab_btn_{i}", use_container_width=True):
                 st.session_state.active_tab = i
                 st.rerun()
@@ -543,79 +520,56 @@ if st.session_state.results:
 
     active = st.session_state.active_tab
 
-    if active == 0:  # ── ANSWER TAB
+    if active == 0:
         if filter_only:
             st.markdown('<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-title">Filter Browse Mode</div><div class="empty-text">Your filtered documents are in the All Matching Documents tab.<br>Type a question to get an AI-generated answer.</div></div>', unsafe_allow_html=True)
         elif chunk_rows:
-            # Replace [SOURCE N] in answer with clickable buttons via Streamlit
-            ans_text = clean_answer(answer)
-            # Split answer on [SOURCE N] markers and render inline
             import re
+            ans_text = clean_answer(answer)
             parts = re.split(r"(\[SOURCE \d+\])", ans_text)
             ans_html_parts = []
             for part in parts:
                 m = re.match(r"\[SOURCE (\d+)\]", part)
                 if m:
                     n = m.group(1)
-                    ans_html_parts.append(f'<span class="citation-ref" title="Click Sources tab to view">[{n}]</span>')
+                    ans_html_parts.append(f'<span class="citation-ref">[{n}]</span>')
                 else:
                     ans_html_parts.append(part.replace("\n","<br>"))
             ans_html = "".join(ans_html_parts)
             st.markdown(f'<div class="answer-block"><div class="answer-label">✦ Analysis</div><div class="answer-text">{ans_html}</div></div>', unsafe_allow_html=True)
 
-            # Referenced sources — each with Open button + "View in Sources" button
             st.markdown('<div class="sources-header">Referenced Sources</div>', unsafe_allow_html=True)
             for i, (cid,did,fname,mgr,asset,dtype,ddate,page,text) in enumerate(unique_chunks):
                 tc = "notes-badge" if dtype=="Notes" else "marketing-badge"
-                fp = path_map.get(did)
-                sc1, sc2, sc3 = st.columns([5, 1, 1])
+                sc1, sc2 = st.columns([6, 1])
                 with sc1:
                     st.markdown(f'<div style="padding:0.5rem 0;border-bottom:1px solid #E8ECF2"><span class="asset-badge">{asset}</span><span class="type-badge {tc}">{dtype}</span> <b style="font-size:0.85rem">{fname}</b> <span style="font-size:0.75rem;color:#8A96A8">· Page {page}</span></div>', unsafe_allow_html=True)
                 with sc2:
-                    if st.button("Sources", key=f"jump_{cid}"):
+                    if st.button("View", key=f"jump_{cid}"):
                         st.session_state.active_tab = 1
                         st.session_state.highlight_source = did
                         st.rerun()
-                with sc3:
-                    if fp and os.path.exists(fp):
-                        if st.button("Open", key=f"ans_open_{cid}"):
-                            subprocess.Popen(["open", fp])
-                    else:
-                        st.markdown('<span style="font-size:0.7rem;color:#8A96A8">—</span>', unsafe_allow_html=True)
         else:
             st.markdown('<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-title">No passages found</div><div class="empty-text">Try broadening your search or adjusting filters.</div></div>', unsafe_allow_html=True)
 
-    elif active == 1:  # ── SOURCE DOCUMENTS TAB
+    elif active == 1:
         if unique_chunks:
             st.markdown(f'<p style="font-size:0.8rem;color:#8A96A8;margin-bottom:1rem">{len(unique_chunks)} source passages retrieved</p>', unsafe_allow_html=True)
             for cid,did,fname,mgr,asset,dtype,ddate,page,text in unique_chunks:
                 tc = "notes-badge" if dtype=="Notes" else "marketing-badge"
-                fp = path_map.get(did)
-                # Highlight this card if jumped to from answer tab
                 is_highlighted = (highlight == did)
                 if is_highlighted:
                     st.session_state.highlight_source = None
                 border_color = "#C9A96E" if is_highlighted else "#1B2A4A"
                 bg_color     = "#FFFDF7" if is_highlighted else "#FFFFFF"
-                anchor_id    = f"src_{did[:8]}"
-                cc, bc = st.columns([6,1])
-                with cc:
-                    ref_label = '<div style="font-size:0.65rem;color:#C9A96E;font-weight:700;letter-spacing:0.1em;margin-bottom:0.4rem">▶ REFERENCED IN ANSWER</div>' if is_highlighted else ""
-                    excerpt = text[:320] + ("..." if len(text)>320 else "")
-                    card_html = f'<div id="{anchor_id}" class="result-card" style="border-left-color:{border_color};background:{bg_color}">{ref_label}<div class="result-filename">{fname}</div><div class="result-meta"><span class="asset-badge">{asset}</span><span class="type-badge {tc}">{dtype}</span> {mgr} · {ddate} · Page {page}</div><div class="result-excerpt">{excerpt}</div></div>'
-                    st.markdown(card_html, unsafe_allow_html=True)
-                with bc:
-                    st.markdown("<br><br>", unsafe_allow_html=True)
-                    if fp and os.path.exists(fp):
-                        if st.button("Open", key=f"s2_{cid}"): subprocess.Popen(["open", fp])
-                    else:
-                        st.markdown('<span style="font-size:0.7rem;color:#8A96A8">—</span>', unsafe_allow_html=True)
-                if is_highlighted:
-                    st.markdown('<script>document.getElementById("{anchor_id}").scrollIntoView({{behavior:"smooth"}});</script>', unsafe_allow_html=True)
+                ref_label = '<div style="font-size:0.65rem;color:#C9A96E;font-weight:700;letter-spacing:0.1em;margin-bottom:0.4rem">▶ REFERENCED IN ANSWER</div>' if is_highlighted else ""
+                excerpt = text[:320] + ("..." if len(text)>320 else "")
+                card_html = f'<div class="result-card" style="border-left-color:{border_color};background:{bg_color}">{ref_label}<div class="result-filename">{fname}</div><div class="result-meta"><span class="asset-badge">{asset}</span><span class="type-badge {tc}">{dtype}</span> {mgr} · {ddate} · Page {page}</div><div class="result-excerpt">{excerpt}</div></div>'
+                st.markdown(card_html, unsafe_allow_html=True)
         else:
             st.markdown('<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-title">No source documents retrieved</div></div>', unsafe_allow_html=True)
 
-    elif active == 2:  # ── ALL MATCHING DOCUMENTS TAB
+    elif active == 2:
         if filtered_docs:
             st.markdown(f'<p style="font-size:0.8rem;color:#8A96A8;margin-bottom:1rem">{len(filtered_docs):,} documents match your filters</p>', unsafe_allow_html=True)
             conn = get_db(); cur = conn.cursor()
@@ -625,26 +579,17 @@ if st.session_state.results:
             pm = {r[0]:r[1] for r in cur.fetchall()}; cur.close(); conn.close()
             for doc_id,fname,mgr,asset,dtype,ddate,ext in filtered_docs[:100]:
                 tc = "notes-badge" if dtype=="Notes" else "marketing-badge"
-                fp = pm.get(doc_id)
-                cc, bc = st.columns([6,1])
-                with cc:
-                    st.markdown(f'<div class="result-card"><div class="result-filename">{fname}</div><div class="result-meta"><span class="asset-badge">{asset} — {ASSET_LABELS.get(asset,"")}</span><span class="type-badge {tc}">{dtype}</span> {mgr} · {ddate} · {ext.upper().replace(".","")}</div></div>', unsafe_allow_html=True)
-                with bc:
-                    st.markdown("<br>", unsafe_allow_html=True)
-                    if fp and os.path.exists(fp):
-                        if st.button("Open", key=f"d_{doc_id}"): subprocess.Popen(["open", fp])
-                    else:
-                        st.markdown('<span style="font-size:0.7rem;color:#8A96A8">—</span>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-card"><div class="result-filename">{fname}</div><div class="result-meta"><span class="asset-badge">{asset} — {ASSET_LABELS.get(asset,"")}</span><span class="type-badge {tc}">{dtype}</span> {mgr} · {ddate} · {ext.upper().replace(".","")}</div></div>', unsafe_allow_html=True)
             if len(filtered_docs) > 100:
                 st.markdown(f'<p style="font-size:0.75rem;color:#8A96A8;text-align:center;margin-top:0.8rem">Showing first 100 of {len(filtered_docs):,} — refine filters to narrow results.</p>', unsafe_allow_html=True)
         else:
             st.markdown('<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-title">No documents match current filters</div></div>', unsafe_allow_html=True)
 
 else:
-    st.markdown(f"""
+    st.markdown("""
     <div class="empty-state">
         <div class="empty-icon">✦</div>
-        <div class="empty-title">Evoke Document Intelligence</div>
+        <div class="empty-title">Document Intelligence Platform</div>
         <div class="empty-text">
             Search across your entire document corpus using natural language.<br>
             Use the filters above to narrow by asset class, manager, type, or year.<br><br>
