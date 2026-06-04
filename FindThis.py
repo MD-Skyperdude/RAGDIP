@@ -73,31 +73,29 @@ html,body,[class*="css"]{ font-family:'Inter',sans-serif; color:var(--text); }
 }
 [data-testid="collapsedControl"] svg { fill:var(--gold) !important; stroke:var(--gold) !important; }
 
-/* ── SIDEBAR LOGO ── */
-.sidebar-logo {
-    font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300;
-    letter-spacing:0.3em; text-transform:uppercase; color:var(--white) !important;
+/* ── SIDEBAR TITLE ── */
+.sidebar-title {
+    font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:300;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--white) !important;
     padding:1.2rem 0 0.4rem; border-bottom:1px solid rgba(201,169,110,0.4);
-    margin-bottom:0.4rem; display:flex; align-items:center; line-height:1;
+    margin-bottom:0.4rem; line-height:1;
 }
-.sidebar-logo .sb { display:inline-flex; align-items:center; justify-content:center;
-    width:0.8em; height:0.8em; margin:0 0.04em; flex-shrink:0; line-height:0; overflow:visible; }
 
 /* ── HEADER ── */
-.evoke-header {
-    background:var(--navy); padding:1.2rem 2rem; margin:-1rem -2rem 1.5rem;
-    display:flex; align-items:center; justify-content:space-between;
+.app-header {
+    background:var(--navy); padding:1rem 2rem; margin:-1rem -2rem 1.5rem;
     border-bottom:2px solid var(--gold);
 }
-.evoke-logo {
-    font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300;
-    color:var(--white); letter-spacing:0.25em; text-transform:uppercase;
-    line-height:1; display:flex; align-items:center;
+.app-title {
+    font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300;
+    color:var(--white); letter-spacing:0.15em; text-transform:uppercase;
+    margin-bottom:0.4rem;
 }
-.evoke-logo .sb { display:inline-flex; align-items:center; justify-content:center;
-    width:0.85em; height:0.85em; margin:0 0.06em; flex-shrink:0; line-height:0; overflow:visible; }
-.evoke-tagline { font-size:0.7rem; color:var(--gold-light); letter-spacing:0.15em; text-transform:uppercase; margin-top:0.3rem; }
-.evoke-subtitle { font-size:0.65rem; color:var(--gray); letter-spacing:0.1em; text-transform:uppercase; text-align:right; }
+.disclaimer-bar {
+    background:rgba(201,169,110,0.15); border:1px solid rgba(201,169,110,0.4);
+    border-radius:3px; padding:0.5rem 1rem; font-size:0.75rem; color:var(--gold-light);
+    letter-spacing:0.03em; line-height:1.5;
+}
 
 /* ── SEARCH ── */
 .stTextInput>div>div>input {
@@ -383,8 +381,8 @@ with st.sidebar:
     doc_count, chunk_count, manager_count, date_range = get_db_stats()
     date_str = f'{date_range[0].strftime("%b %Y")} — {date_range[1].strftime("%b %Y")}' if date_range[0] else ""
 
-    st.markdown(f'<div class="sidebar-logo">EV<span class="sb">{SUNBURST}</span>KE</div>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:0.6rem;color:#8A96A8;letter-spacing:0.12em;text-transform:uppercase;margin:0.3rem 0 0">A Division of MAI</p>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-title">Document Intelligence</div>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:0.6rem;color:#8A96A8;letter-spacing:0.12em;text-transform:uppercase;margin:0.3rem 0 0">RAG Prototype</p>', unsafe_allow_html=True)
     st.markdown('<hr style="border:none;border-top:1px solid rgba(201,169,110,0.2);margin:1.5rem 0"/>', unsafe_allow_html=True)
     st.markdown('<div style="height:45vh"></div>', unsafe_allow_html=True)
     st.markdown('<hr style="border:none;border-top:1px solid rgba(201,169,110,0.25);margin:0 0 1rem"/>', unsafe_allow_html=True)
@@ -392,16 +390,15 @@ with st.sidebar:
     st.markdown(f'<p style="font-size:0.9rem;color:#E8D5B0;margin:0 0 0.2rem"><b>{doc_count:,}</b> documents</p>', unsafe_allow_html=True)
     st.markdown(f'<p style="font-size:0.9rem;color:#E8D5B0;margin:0 0 0.2rem"><b>{manager_count}</b> managers</p>', unsafe_allow_html=True)
     st.markdown(f'<p style="font-size:0.75rem;color:#8A96A8;margin:0 0 1rem">{date_str}</p>', unsafe_allow_html=True)
-    st.markdown('<p style="font-size:0.6rem;color:#4A5568;text-align:center">EVOKE ADVISORS · A DIVISION OF MAI<br>Document Intelligence Platform · Prototype</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:0.6rem;color:#4A5568;text-align:center">Document Intelligence Platform<br>Prototype — AI Generated Test Data</p>', unsafe_allow_html=True)
 
 # ── HEADER ────────────────────────────────────────────────────────────────────
-st.markdown(f"""
-<div class="evoke-header">
-    <div>
-        <div class="evoke-logo">EV<span class="sb">{SUNBURST}</span>KE</div>
-        <div class="evoke-tagline">A DIVISION OF MAI</div>
+st.markdown("""
+<div class="app-header">
+    <div class="app-title">Document Intelligence Platform</div>
+    <div class="disclaimer-bar">
+        ⚠ &nbsp;<strong>Prototype Demo:</strong> All documents, fund names, manager names, performance data, and any other information displayed in this application are entirely AI-generated synthetic test data. This system contains no real investment data, no real fund information, and no confidential or proprietary information of any kind. This prototype is for demonstration purposes only.
     </div>
-    <div class="evoke-subtitle">Document Intelligence Platform<br>Private Investment Research</div>
 </div>
 """, unsafe_allow_html=True)
 
